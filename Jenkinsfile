@@ -16,12 +16,18 @@ pipeline {
 
         stage('Build') {
             steps{
+                docker.withRegistry('https://docker.mycorp.com/') {
+                      def myImg = docker.image('myImg')
+                      // or docker.build, etc.
+                      sh "docker pull --all-tags ${myImg.imageName()}"
+                      // runs: docker pull --all-tags docker.mycorp.com/myImg
+                }
                 // Login to ECR
-                sh 'aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com'
+                // sh 'aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com'
                 // Build container image
-                sh 'DOCKER_BUILDKIT=1 docker build -t prezzee-server:manual-supervisor --build-arg ENV=nonprod --target app -f docker/aws/Dockerfile.supervisor .'
-                sh 'docker tag prezzee-server:manual-supervisor 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com/prezzee-test/prezzee-server:manual-supervisor'
-                sh 'docker push 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com/prezzee-test/prezzee-server:manual-supervisor'
+                // sh 'DOCKER_BUILDKIT=1 docker build -t prezzee-server:manual-supervisor --build-arg ENV=nonprod --target app -f docker/aws/Dockerfile.supervisor .'
+                // sh 'docker tag prezzee-server:manual-supervisor 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com/prezzee-test/prezzee-server:manual-supervisor'
+                // sh 'docker push 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com/prezzee-test/prezzee-server:manual-supervisor'
             }
         }
 
