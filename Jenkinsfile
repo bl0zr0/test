@@ -16,13 +16,13 @@ pipeline {
 
         stage('Build') {
             steps{
-                //docker.withRegistry('https://docker.mycorp.com/') {
+                docker.withRegistry('https://hub.docker.com/') {
                       def myImg = docker.image('ubuntu:latest')
                       myImg.pull()
                       // or docker.build, etc.
-                      //sh "docker pull --all-tags ${myImg.imageName()}"
+                      sh "docker pull --all-tags ${myImg.imageName()}"
                       // runs: docker pull --all-tags docker.mycorp.com/myImg
-                //}
+                }
                 // Login to ECR
                 // sh 'aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com'
                 // Build container image
