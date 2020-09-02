@@ -16,10 +16,12 @@ pipeline {
 
         stage('Build') {
             steps{
-                sh 'pwd'
-                sh 'ls -l'
+                // Login to ECR
+                sh 'aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com'
                 // Build container image
-                sh 'docker build -t prezzee-server:manual-supervisor --build-arg ENV=nonprod --target app -f docker/aws/Dockerfile.supervisor .'
+                sh 'DOCKER_BUILDKIT=1 docker build -t prezzee-server:manual-supervisor --build-arg ENV=nonprod --target app -f docker/aws/Dockerfile.supervisor .'
+                sh 'docker tag prezzee-server:manual-supervisor 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com/prezzee-test/prezzee-server:manual-supervisor'
+                sh 'docker push 017460935128.dkr.ecr.ap-southeast-2.amazonaws.com/prezzee-test/prezzee-server:manual-supervisor'
             }
         }
 
