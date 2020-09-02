@@ -1,7 +1,8 @@
 node {
     checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: 'refs/heads/feature/app-containerisation']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'CheckoutOption', timeout: 30], [$class: 'CloneOption', depth: 1, honorRefspec: true, noTags: true, reference: '', shallow: true, timeout: 30]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'f70b7a5f-0134-4784-a4ca-8c526557b94c', url: 'git@bitbucket.org:teamprezzee/prezzee-server.git']]]
 
-    docker.withRegistry('https://hub.docker.com') {
+    sh 'cd docker/aws/'
+    docker.withRegistry('https://017460935128.dkr.ecr.ap-southeast-2.amazonaws.com') {
 
         def customImage = docker.build("my-image:${env.BUILD_ID}")
 
